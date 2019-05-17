@@ -1,0 +1,13 @@
+; ./projects/demo/code.s
+NOTHINGdown                      = $80A4
+Start                            = $8000
+Y_Pos                            = $0001
+waitblank                        = $8021
+UPKEYdown                        = $807B
+infinite                         = $8021
+LEFTKEYdown                      = $8091
+tilepal                          = $80A7
+DOWNKEYdown                      = $8086
+X_Pos                            = $0000
+loadpal                          = $8016
+RIGHTKEYdown                     = $809C

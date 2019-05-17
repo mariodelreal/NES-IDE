@@ -1,0 +1,18 @@
+.project-editor-container-hidden{
+    display: none;
+}
+
+.project-editor-container-visible{
+    display: block;
+    margin: 20px;
+}
+
+.palette-table{
+    border-collapse: collapse;
+}
+
+.palette-table-cell{
+    width: 20px;
+    text-align: center;
+    border: 1px solid black;
+}

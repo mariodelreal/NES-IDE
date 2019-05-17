@@ -1,0 +1,24 @@
+; ./projects/mariotest/code.s
+LoadSpritesLoop                  = $C059
+LoadPalettes                     = $C03D
+LatchController                  = $C0AF
+LoadBackgroundLoop               = $C073
+Forever                          = $C0A2
+palette                          = $E000
+LoadPalettesLoop                 = $C04C
+ReadBDone                        = $C0D9
+background                       = $E030
+LoadSprites                      = $C057
+LoadAttribute                    = $C07E
+ReadA                            = $C0B9
+attribute                        = $E0B0
+ReadB                            = $C0C9
+vblankwait1                      = $C014
+vblankwait2                      = $C038
+clrmem                           = $C019
+RESET                            = $C000
+sprites                          = $E020
+ReadADone                        = $C0C9
+NMI                              = $C0A5
+LoadAttributeLoop                = $C08D
+LoadBackground                   = $C064

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="/css/index.css"> 
+
+        <link rel="stylesheet" href="/css/project-editor.css"> 
+
+        <title>NES IDE</title>
+    </head>
+
+    <body>
+        <div class="main-container">
+
+            <div class="nav-bar">
+                <div class="nav-bar-item nav-bar-title">NES IDE</div>
+                <div class="nav-bar-item nav-bar-option" id="file-option">File</div>
+                <div class="nav-bar-item nav-bar-option" id="open-option" onclick="showOpenProjectModal()">Open Project</div>
+                <div class="nav-bar-item nav-bar-option" id="save-option" onclick="sendSaveProjectRequest()">Save Project</div>
+                <div class="nav-bar-item nav-bar-option" id="run-option" onclick="sendRunProjectRequest()">Run Project</div>
+            </div>
+
+            <div class="nav-bar-hidden" id="file-dropdown" style="background-color: white">
+                <div class="nav-bar-item nav-bar-title" style="opacity: 0">NES IDE</div>
+                <div class="file-dropdown-list" id="file-dropdown-list">
+                    <div class="file-dropdown-item" id="new-project-option" onclick="showNewProjectModal()">New Project</div>
+                    <div class="file-dropdown-item" id="close-project-option" onclick="sendCloseProjectRequest()">Close Project</div>            
+                    <div class="file-dropdown-item" id="settings-option">Settings</div>
+                </div>
+            </div>
+
+            <div class="modal-hidden new-project-modal" id="new-project-modal">
+                <h4>Project Name</h4>
+                <input type="text" id="new-project-modal-text"/>
+                <input type="button" id="new-project-modal-submit" value="Submit" onclick="sendNewProjectRequest()"/>
+            </div>
+
+            <div class="modal-hidden open-project-modal" id="open-project-modal">
+                <h4>Project Name</h4>
+                <input type="text" id="open-project-modal-text"/>
+                <input type="button" id="open-project-modal-submit" value="Submit" onclick="sendOpenProjectRequest()"/>
+            </div>
+
+            <input class="open-project-widget" id="open-project-widget" type="file">
+            
+            <div class="project-editor-container-hidden" id="project-editor-container">
+                <div class="upper-editor-container">
+                    <div class="palette-editor-container">
+                        <div>
+                            <span class="active-editor-on" id="sprite-editor-label" onclick="showSpriteEditor(this)">Sprite</span>
+                            <span class="active-editor-off" id="background-editor-label" onclick="showBackgroundEditor(this)">Background</span>
+                        </div>
+                        <div>
+                            <div data-nes="0x00" class="palette-color" id="universal-color0" onclick="paletteColorListener(this)"></div>
+                            <div class="palette-label">Universal Color</div>
+                        </div>
+                        
+                        <div class="palette-editor">
+                            <div>
+                                <span class="palette">
+                                    <div data-nes="0x01" class="palette-color" id="P1-color1" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x02" class="palette-color" id="P1-color2" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x03" class="palette-color" id="P1-color3" onclick="paletteColorListener(this)"></div>
+                                </span>
+                                <div class="palette-label">Palette 1</div>
+                            </div>
+                            <div>
+                                <span class="palette">
+                                    <div data-nes="0x04" class="palette-color" id="P2-color1" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x05" class="palette-color" id="P2-color2" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x06" class="palette-color" id="P2-color3" onclick="paletteColorListener(this)"></div>
+                                </span>
+                                <div class="palette-label">Palette 2</div>
+                            </div>
+                            <div>
+                                <span class="palette">
+                                    <div data-nes="0x07" class="palette-color" id="P3-color1" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x08" class="palette-color" id="P3-color2" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x09" class="palette-color" id="P3-color3" onclick="paletteColorListener(this)"></div>
+                                </span>
+                                <div class="palette-label">Palette 3</div>
+                            </div>
+                            <div>
+                                <span class="palette">
+                                    <div data-nes="0x0a" class="palette-color" id="P4-color1" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x0b" class="palette-color" id="P4-color2" onclick="paletteColorListener(this)"></div>
+                                    <div data-nes="0x0c" class="palette-color" id="P4-color3" onclick="paletteColorListener(this)"></div>
+                                </span>
+                                <div class="palette-label">Palette 4</div>
+                            </div>
+                        </div>
+    
+                        <div class="tile-tools-hidden" id="tile-tools">
+                            <div data-current="0" class="tile-tool-visible current-palette" id="current-palette" onclick="changePalette(this)"></div>
+                            <div class="tile-tool-hidden current-palette-option" onclick="setPalette(this)">P1</div>
+                            <div class="tile-tool-hidden current-palette-option" onclick="setPalette(this)">P2</div>
+                            <div class="tile-tool-hidden current-palette-option" onclick="setPalette(this)">P3</div>
+                            <div class="tile-tool-hidden current-palette-option" onclick="setPalette(this)">P4</div>
+    
+                            <div data-nes="0x00" data-current="0" class="tile-tool-visible current-brush-color" id="current-brush-color" onclick="changeBrushColor(this)"></div>
+                            <div data-nes="0x00" class="tile-tool-hidden current-brush-color-option" id="current-brush-color-option0" onclick="setBrushColor(this)"></div>
+                            <div data-nes="0x01" class="tile-tool-hidden current-brush-color-option" id="current-brush-color-option1" onclick="setBrushColor(this)"></div>
+                            <div data-nes="0x02" class="tile-tool-hidden current-brush-color-option" id="current-brush-color-option2" onclick="setBrushColor(this)"></div>
+                            <div data-nes="0x03" class="tile-tool-hidden current-brush-color-option" id="current-brush-color-option3" onclick="setBrushColor(this)"></div>
+                            
+                            <div class="tile-tool-visible maximize-tile" id="maximize-tile">M</div>
+                            <div class="tile-tool-visible hide-tile" id="hide-tile">X</div>
+                        </div>
+        
+                        <table id="palette-table" class="palette-table" cellpadding="5">
+                            <tbody>
+                                <tr>
+                                    <td class="palette-table-cell"></td>
+                                    <td class="palette-table-cell">0</td>
+                                    <td class="palette-table-cell">1</td>
+                                    <td class="palette-table-cell">2</td>
+                                    <td class="palette-table-cell">3</td>
+                                    <td class="palette-table-cell">4</td>
+                                    <td class="palette-table-cell">5</td>
+                                    <td class="palette-table-cell">6</td>
+                                    <td class="palette-table-cell">7</td>
+                                    <td class="palette-table-cell">8</td>
+                                    <td class="palette-table-cell">9</td>
+                                    <td class="palette-table-cell">A</td>
+                                    <td class="palette-table-cell">B</td>
+                                    <td class="palette-table-cell">C</td>
+                                    <td class="palette-table-cell">D</td>
+                                    <td class="palette-table-cell">E</td>
+                                    <td class="palette-table-cell">F</td>
+                                </tr>
+                                <tr>
+                                    <td class="palette-table-cell">$0</td>
+                                    <td data-nes="0x00" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(124,124,124);"></td>
+                                    <td data-nes="0x01" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,252);"></td>
+                                    <td data-nes="0x02" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,188);"></td>
+                                    <td data-nes="0x03" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(68,40,188);"></td>
+                                    <td data-nes="0x04" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(148,0,132);"></td>
+                                    <td data-nes="0x05" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(168,0,32);"></td>
+                                    <td data-nes="0x06" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(168,16,0);"></td>
+                                    <td data-nes="0x07" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(136,20,0);"></td>
+                                    <td data-nes="0x08" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(80,48,0);"></td>
+                                    <td data-nes="0x09" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,120,0);"></td>
+                                    <td data-nes="0x0a" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,104,0);"></td>
+                                    <td data-nes="0x0b" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,88,0);"></td>
+                                    <td data-nes="0x0c" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,64,88);"></td>
+                                    <td data-nes="0x0d" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                    <td data-nes="0x0e" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                    <td data-nes="0x0f" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                </tr>
+                                <tr>
+                                    <td class="palette-table-cell">$1</td>
+                                    <td data-nes="0x10" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(188,188,188);"></td>
+                                    <td data-nes="0x11" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,120,248);"></td>
+                                    <td data-nes="0x12" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,88,248);"></td>
+                                    <td data-nes="0x13" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(104,68,252);"></td>
+                                    <td data-nes="0x14" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(216,0,204);"></td>
+                                    <td data-nes="0x15" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(228,0,88);"></td>
+                                    <td data-nes="0x16" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,56,0);"></td>
+                                    <td data-nes="0x17" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(228,92,16);"></td>
+                                    <td data-nes="0x18" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(172,124,0);"></td>
+                                    <td data-nes="0x19" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,184,0);"></td>
+                                    <td data-nes="0x1a" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,168,0);"></td>
+                                    <td data-nes="0x1b" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,168,68);"></td>
+                                    <td data-nes="0x1c" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,136,136);"></td>
+                                    <td data-nes="0x1d" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                    <td data-nes="0x1e" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                    <td data-nes="0x1f" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                </tr>
+                                <tr>
+                                    <td class="palette-table-cell">$2</td>
+                                    <td data-nes="0x20" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,248,248);"></td>
+                                    <td data-nes="0x21" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(60,188,252);"></td>
+                                    <td data-nes="0x22" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(104,136,252);"></td>
+                                    <td data-nes="0x23" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(152,120,248);"></td>
+                                    <td data-nes="0x24" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,120,248);"></td>
+                                    <td data-nes="0x25" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,88,152);"></td>
+                                    <td data-nes="0x26" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,120,88);"></td>
+                                    <td data-nes="0x27" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(252,160,68);"></td>
+                                    <td data-nes="0x28" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,184,0);"></td>
+                                    <td data-nes="0x29" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(184,248,24);"></td>
+                                    <td data-nes="0x2a" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(88,216,84);"></td>
+                                    <td data-nes="0x2b" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(88,248,152);"></td>
+                                    <td data-nes="0x2c" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,232,216);"></td>
+                                    <td data-nes="0x2d" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(120,120,120);"></td>
+                                    <td data-nes="0x2e" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                    <td data-nes="0x2f" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                </tr>
+                                <tr>
+                                    <td class="palette-table-cell">$3</td>
+                                    <td data-nes="0x30" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(252,252,252);"></td>
+                                    <td data-nes="0x31" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(164,228,252);"></td>
+                                    <td data-nes="0x32" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(184,184,248);"></td>
+                                    <td data-nes="0x33" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(216,184,248);"></td>
+                                    <td data-nes="0x34" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,184,248);"></td>
+                                    <td data-nes="0x35" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,164,192);"></td>
+                                    <td data-nes="0x36" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(240,208,176);"></td>
+                                    <td data-nes="0x37" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(252,224,168);"></td>
+                                    <td data-nes="0x38" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(248,216,120);"></td>
+                                    <td data-nes="0x39" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(216,248,120);"></td>
+                                    <td data-nes="0x3a" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(184,248,184);"></td>
+                                    <td data-nes="0x3b" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(184,248,216);"></td>
+                                    <td data-nes="0x3c" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,252,252);"></td>
+                                    <td data-nes="0x3d" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(216,216,216);"></td>
+                                    <td data-nes="0x3e" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                    <td data-nes="0x3f" class="selectable palette-table-cell" onclick="selectableListener(this)" style="color:white; background:rgb(0,0,0);"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="code-editor">
+                        <textarea class="code-textarea" id="code-textarea" rows="15" spellcheck="false"></textarea>
+                    </div>
+                </div>
+                
+                <br>
+                <div class="tile-editor" id="tile-editor">
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="/js/project-editor.js"></script>
+    <script src="/js/index.js"></script>
+
+</html>

@@ -1,0 +1,6 @@
+; ./projects/test2/code.s
+background                       = $E000
+RESET                            = $C000
+InfiniteLoop                     = $C01B
+NMI                              = $C04C
+LoadBackground                   = $C01E
